@@ -1,0 +1,26 @@
+# Python cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment (Poetry uses .venv by default inside the project)
+tools/.venv/
+
+# Google OAuth Credentials - DO NOT COMMIT THESE
+# Now located directly under tools/
+tools/credentials.json
+tools/token.json
+
+# macOS specific files
+.DS_Store
+
+# IDE specific files (optional, add based on your IDE)
+# .idea/
+# .vscode/
+
+# Default output file (optional, good practice to ignore generated output)
+# llm_keyword_counts.csv
+# keywords_frequency.png
+# application_status_sankey.png
+# discovered_companies.csv 

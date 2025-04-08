@@ -1,0 +1,14 @@
+[
+  {
+    "name": "Y Combinator Companies",
+    "url": "https://www.ycombinator.com/companies",
+    "selector": "a._company_86jzd_337 span._companyName_86jzd_411",
+    "notes": "Selector targets the specific company name span."
+  },
+  {
+    "name": "CTech Startups Category",
+    "url": "https://www.calcalistech.com/ctechnews/category/5214",
+    "selector": "h3.title",
+    "notes": "Selector targets the headline element (h3 with class title). Text content will be passed to LLM for company name extraction."
+  }
+] 
