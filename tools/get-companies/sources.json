@@ -1,14 +1,38 @@
 [
   {
-    "name": "Y Combinator Companies",
-    "url": "https://www.ycombinator.com/companies",
-    "selector": "a._company_86jzd_337 span._companyName_86jzd_411",
-    "notes": "Selector targets the specific company name span."
-  },
-  {
     "name": "CTech Startups Category",
     "url": "https://www.calcalistech.com/ctechnews/category/5214",
-    "selector": "h3.title",
-    "notes": "Selector targets the headline element (h3 with class title). Text content will be passed to LLM for company name extraction."
+    "selector": "div.slotTitle",
+    "notes": "Selector targets the div containing the headline. Text content will be passed to LLM for company name extraction and description."
+  },
+  {
+    "name": "Seedtable Israel Startups",
+    "url": "https://seedtable.com/best-startups-in-israel",
+    "selector": "div.flex.flex-1.items-center.md\\:items-start.justify-between",
+    "notes": "Selector targets the div containing the company name. Direct name extraction. Description generated from name only."
+  },
+  {
+    "name": "Startup Nation Central Finder",
+    "url": "https://finder.startupnationcentral.org",
+    "selector": "div.trending-item-name",
+    "notes": "Selector targets name div in 'Trending Investments'. Requires LLM for name cleaning & description. Might miss companies listed in other sections. CURRENTLY NOT WORKING."
+  },
+  {
+    "name": "Geektime Funding Category",
+    "url": "https://www.geektime.co.il/category/funding/",
+    "selector": "div.card__content",
+    "notes": "Selector targets the main content block of a funding news item. Requires LLM for name extraction and description."
+  },
+  {
+    "name": "Forbes Israel Entrepreneurship",
+    "url": "https://forbes.co.il/entrepreneurship/",
+    "selector": "div.elementor-post__text",
+    "notes": "Selector targets the text block (title + excerpt) of an article. Requires LLM for name extraction and description."
+  },
+  {
+    "name": "Team8 Portfolio",
+    "url": "https://team8.vc/portfolio/",
+    "selector": "div.company-item_wrapper",
+    "notes": "Selector targets the container for each portfolio company. Requires LLM for name extraction and description."
   }
 ] 
