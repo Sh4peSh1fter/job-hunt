@@ -55,29 +55,34 @@ backend/
 ├── app/                  # Core application logic, routers, models, services
 │   ├── __init__.py
 │   ├── main.py           # FastAPI app instantiation and global middleware
+│   ├── config.py         # Application configuration (e.g., settings, not DB credentials for local SQLite)
 │   ├── routers/          # API routers (endpoints)
-│   ├── models/           # Pydantic schemas & SQLAlchemy ORM models
+│   ├── models/           # SQLAlchemy ORM models & Pydantic schemas
 │   ├── services/         # Business logic services
-│   └── db/               # Database setup (SQLAlchemy, SQLite)
-│       └── database.py     # SQLAlchemy engine, session, Base
-├── tools/                  # Individual tool modules (e.g., keyword_analyzer)
+│   └── db/               # Database setup (SQLAlchemy, SQLite), migration config
+│       ├── database.py     # SQLAlchemy engine, session, Base
+│       └── alembic.ini     # Alembic configuration (if not in root or backend/)
+│       └── env.py          # Alembic environment script (if not in root or backend/)
+├── tools/                  # Individual tool modules
 │   ├── keyword_analyzer/
 │   │   ├── __init__.py
 │   │   └── processor.py  # Logic for this specific tool
 │   └── ...               # Other tools
+├── alembic/              # Alembic migrations (alternative location)
+│   └── versions/
 ├── tests/                # Backend tests (using Pytest)
 └── pyproject.toml        # Poetry for dependency management
 ```
 
-*   **`backend/app/`**: Houses the main FastAPI application, shared Pydantic schemas, SQLAlchemy models, database setup (`db/database.py`), and core service logic.
-*   **`backend/tools/`**: Each subdirectory is a self-contained tool module. It should include its own specific logic (e.g., `processor.py`) and can have its own Pydantic schemas if its inputs/outputs are unique.
-*   **`pyproject.toml`:** Managed by Poetry for all Python dependencies.
+*   **`backend/app/config.py`**: For managing general application settings using Pydantic `BaseSettings` (e.g., API rate limits, external API keys for tools if any, but not SQLite connection details as it's local).
+*   **`backend/app/db/database.py`**: For SQLAlchemy setup (engine, `SessionLocal`, `Base`).
+*   **`backend/app/models/`**: Contains SQLAlchemy ORM models and corresponding Pydantic schemas for API request/response.
+*   **`alembic/` or `backend/app/db/migrations/`**: Directory for Alembic migration scripts.
 
 ### 2.2 File Naming Conventions
 
 *   Python files: `snake_case.py` (e.g., `user_service.py`, `database.py`).
-*   Pydantic schemas: PascalCase, often in files like `schemas.py` or within specific tool modules. Suffix with `Schema` or `Model` (e.g., `ToolInputSchema`, `KeywordResult`).
-*   SQLAlchemy ORM models: PascalCase, typically in `models.py` within `backend/app/models/`. (e.g., `JobSearchEntry`).
+*   Pydantic schemas & SQLAlchemy ORM models: PascalCase (e.g., `ToolOutput`, `KeywordResultSchema`). Can be in the same files or separate (e.g., `models.py`, `schemas.py` inside `backend/app/models/`).
 
 ### 2.3 Module Organization
 
@@ -118,83 +123,47 @@ Employ established design patterns and avoid common anti-patterns to write clean
 
 ### 3.2 Recommended Approaches for Common Tasks
 
-*   **Configuration Management:** Use Pydantic's `BaseSettings` to manage environment variables and application settings. See `backend/app/config.py` if created.
+*   **Configuration Management:**
+    *   Use Pydantic's `BaseSettings` in `backend/app/config.py` for general app settings (not SQLite connection string, which is usually hardcoded or very simple for local SQLite).
 *   **Database Interactions (SQLite with SQLAlchemy):**
-        *   **Setup:** 
-            *   For synchronous operations: Define SQLAlchemy engine (`create_engine`), `SessionLocal` (`sessionmaker`), and `Base` (`declarative_base`) in `backend/app/db/database.py`. Ensure the SQLite database URL points to a local file (e.g., `sqlite:///./job_hunt.db`).
-            *   For asynchronous operations (recommended for FastAPI): Use `create_async_engine` and `AsyncSession` from `sqlalchemy.ext.asyncio`. You'll need an async SQLite driver like `aiosqlite` (add to Poetry: `poetry add aiosqlite`).
-                ```python
-                # backend/app/db/database.py - Async Example
-                from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
-                from sqlalchemy.orm import sessionmaker, declarative_base
+    *   **Setup:** Define SQLAlchemy engine (`create_engine`), `SessionLocal` (`sessionmaker`), and `Base` (`declarative_base`) in `backend/app/db/database.py`. Ensure the SQLite database URL points to a local file (e.g., `sqlite+aiosqlite:///./job_hunt.db` for async, or `sqlite:///./job_hunt.db` for sync).
+        ```python
+        # backend/app/db/database.py - Async Example
+        from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+        from sqlalchemy.orm import sessionmaker, declarative_base
 
-                SQLALCHEMY_DATABASE_URL = "sqlite+aiosqlite:///./job_hunt.db"
+        SQLALCHEMY_DATABASE_URL = "sqlite+aiosqlite:///./backend/job_hunt.db" # Path relative to where app runs
 
-                async_engine = create_async_engine(SQLALCHEMY_DATABASE_URL)
-                AsyncSessionLocal = sessionmaker(
-                    autocommit=False, autoflush=False, bind=async_engine, class_=AsyncSession
-                )
-                Base = declarative_base()
-                ```
-        *   **ORM Models:** Define database tables as Python classes inheriting from `Base` in `backend/app/models/`. Use SQLAlchemy column types and relationships. Ensure appropriate indexing on frequently queried columns, even for SQLite, if data volumes might grow.
-        *   **Session Management (Dependency Injection):** 
-            *   Use FastAPI's dependency injection to provide database sessions to route handlers and services.
-            *   **Synchronous `get_db` dependency:**
-                ```python
-                # backend/app/db/dependencies.py (or directly in database.py)
-                from .database import SessionLocal # Assuming sync setup
-                def get_db():
-                    db = SessionLocal()
-                    try:
-                        yield db
-                    finally:
-                        db.close()
-                ```
-            *   **Asynchronous `get_async_db` dependency:**
-                ```python
-                # backend/app/db/dependencies.py (or directly in database.py)
-                from .database import AsyncSessionLocal # Assuming async setup
-                async def get_async_db():
-                    async with AsyncSessionLocal() as session:
-                        try:
-                            yield session
-                            await session.commit() # Commit successful transactions
-                        except Exception:
-                            await session.rollback() # Rollback on error
-                            raise
-                        finally:
-                            await session.close() # Ensure session is closed
-                ```
-        *   **CRUD Operations:** 
-            *   Implement Create, Read, Update, Delete operations within service layers or repository patterns, using the SQLAlchemy session.
-            *   For async, use `await session.execute(...)`, `await session.add(...)`, `await session.commit()`, `await session.refresh(...)`, etc.
-            *   Always handle potential exceptions (e.g., `sqlalchemy.exc.IntegrityError`) during database operations.
-        *   **Efficient Querying:**
-            *   For reading specific columns or complex aggregations, use `select()` statements with `session.execute()` (or `await session.execute()` for async) rather than always loading full ORM objects. This can improve performance.
-            *   Leverage SQLAlchemy's query building capabilities to construct efficient queries.
-        *   **Converting SQLAlchemy Models to Pydantic Schemas:**
-            *   In your Pydantic schemas used for API responses, set `model_config = {'from_attributes': True}` (Pydantic V2) or `Config.orm_mode = True` (Pydantic V1) to enable direct parsing from SQLAlchemy model instances.
-                ```python
-                # backend/app/schemas/item.py (Example)
-                from pydantic import BaseModel
-
-                class ItemBase(BaseModel):
-                    title: str
-                    description: str | None = None
-
-                class Item(ItemBase):
-                    id: int
-                    owner_id: int
-
-                    model_config = {"from_attributes": True} # Pydantic V2
-                ```
-        *   **Migrations:** For schema changes, use Alembic (`poetry add alembic`). Configure it to work with SQLAlchemy (and `aiosqlite` if using async). The `alembic/` directory in the example structure (Section 2.1) can be adapted. For async, Alembic's `env.py` will need to be adjusted to use an async connection for generating revisions.
+        async_engine = create_async_engine(SQLALCHEMY_DATABASE_URL)
+        AsyncSessionLocal = sessionmaker(
+            autocommit=False, autoflush=False, bind=async_engine, class_=AsyncSession
+        )
+        Base = declarative_base()
+        ```
+    *   **ORM Models:** Define database tables as Python classes inheriting from `Base` in `backend/app/models/`. Use SQLAlchemy column types and relationships.
+    *   **Session Management (Dependency Injection):** Use FastAPI's dependency injection for database sessions.
+        ```python
+        # backend/app/db/dependencies.py (or in database.py)
+        from .database import AsyncSessionLocal # Assuming async
+        async def get_async_db():
+            async with AsyncSessionLocal() as session:
+                try:
+                    yield session
+                    # For many operations, explicit commit in service layer is better
+                    # await session.commit() # Consider if auto-commit here is desired
+                except Exception:
+                    await session.rollback()
+                    raise
+                # finally:
+                    # await session.close() # AsyncSessionLocal() used as context manager handles this
+        ```
+    *   **CRUD Operations:** Implement in service layers using the SQLAlchemy session. Handle `sqlalchemy.exc.IntegrityError` etc.
+    *   **Efficient Querying:** Use `select()` statements with `session.execute()` for specific columns or complex aggregations.
+    *   **Converting SQLAlchemy Models to Pydantic Schemas:** Use `model_config = {'from_attributes': True}` (Pydantic V2) or `Config.orm_mode = True` (Pydantic V1) in Pydantic schemas.
+    *   **Migrations:** Use Alembic. Initialize Alembic (`poetry run alembic init alembic` in `backend/` or `backend/app/db/`). Configure `alembic.ini` and `env.py` for SQLite and your models. `env.py` needs to point to `Base.metadata` and the database URL.
 *   **Google Sheets API Integration (Optional Feature):**
-    *   If implementing, ensure API client libraries (e.g., `google-api-python-client`, `gspread`) are added via Poetry.
-    *   **Credential Management:** Securely manage Google API credentials. For a local app, this might involve users providing their own credentials (e.g., via a local file path specified in config, or an OAuth2 flow if a web server component is used for auth). Avoid hardcoding credentials.
-    *   **Service Layer:** Encapsulate Google Sheets interactions within a dedicated service.
-    *   **Error Handling:** Implement robust error handling for API calls (network issues, authentication failures, rate limits).
-    *   **Asynchronous Operations:** Use `httpx` or `aiohttp` if making calls to Google Sheets API from async FastAPI paths to avoid blocking.
+    *   Libraries: `google-api-python-client`, `gspread`.
+    *   Interactions will read/write from/to the local SQLite DB via SQLAlchemy services.
 
 ### 3.3 Anti-patterns and Code Smells to Avoid
 
@@ -202,7 +171,7 @@ Employ established design patterns and avoid common anti-patterns to write clean
 *   **Tight Coupling:** Minimize dependencies between components to improve maintainability and testability.
 *   **Ignoring Asynchronous Operations:** Blocking I/O in async routes can negate the benefits of concurrency. Ensure all I/O operations in async routes are non-blocking.
 *   **Lack of Data Validation:** Failing to validate input data can lead to security vulnerabilities and unexpected behavior. Always use Pydantic models for data validation.
-*   **Hardcoding Values:** Avoid hardcoding values in the code. Use configuration files or environment variables instead.
+*   **Hardcoding Sensitive Values:** (Avoid for external API keys, etc. SQLite path is less sensitive but can be configurable).
 *   **Returning Pydantic objects directly from routes.** FastAPI makes an extra conversion. Return a dict.
 
 ### 3.4 State Management Best Practices
@@ -382,11 +351,11 @@ Utilize the right tools and environment for efficient FastAPI development.
 
 ### 8.1 Recommended Development Tools
 
-*   **IDE:** VS Code, PyCharm, or other IDE with Python support.
-*   **Virtual Environment & Package Manager:** **Poetry** (manages `pyproject.toml` and `poetry.lock`).
-    *   Common commands: `poetry install`, `poetry add <package>`, `poetry run <command>`.
+*   **IDE:** VS Code, PyCharm.
+*   **Virtual Environment & Package Manager:** **Poetry**.
+    *   Dependencies: `fastapi`, `uvicorn`, `pydantic`, `sqlalchemy`, `aiosqlite`, `google-api-python-client`, `gspread`.
+    *   Dev Dependencies: `pytest`, `ruff`, `httpx`, `alembic`.
 *   **Debugger:** `pdb` or `ipdb`.
-*   **Profiler:** `cProfile` or `py-spy`.
 
 ### 8.2 Build Configuration
 

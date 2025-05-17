@@ -71,7 +71,7 @@ The "job-hunt" project will be a web application with a Python/FastAPI backend a
     -   **Current/Proposed Version(s):** Version bundled with Python
     -   **Purpose/Role in Project:** Primary local data storage for tool outputs, user notes (future), etc.
     -   **Rationale/Decision Date:** Serverless, zero-configuration, single-file database, good Python support. (Decision: 17.5.2025 - see `docs/adr/ADR-001-database-choice.md`)
-    -   **Key Libraries/Plugins Used (ORM, drivers):** SQLAlchemy
+    -   **Key Libraries/Plugins Used (ORM, drivers):** SQLAlchemy, Alembic (for migrations)
 
 ### Optional Integrations (User-Configured)
 

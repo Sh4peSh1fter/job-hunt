@@ -17,21 +17,38 @@ The "job-hunt" application requires a local data storage solution to persist out
 
 ## Decision Drivers
 
-*   Simplicity of setup and maintenance.
+*   Simplicity of setup and maintenance for local use.
 *   Robustness for a local, single-user application.
-*   Good integration with the chosen backend technology (Python/FastAPI).
-*   Ability to handle structured data and relationships if needed for future features.
-*   Low resource footprint.
+*   Good integration with the chosen backend technology (Python/FastAPI via SQLAlchemy).
+*   Ability to handle structured data and relationships.
+*   Low resource footprint and no external dependencies for core database functionality.
 
-## Considered Options
+## Chosen Option: SQLite
 
-1.  **SQLite:**
-    *   Pros: Serverless, zero-configuration, single-file database, excellent Python support, mature, ACID compliant.
-    *   Cons: Less feature-rich than client-server RDBMS (not a major issue for this use case).
+**SQLite** is chosen as the primary local database solution for the "job-hunt" application, to be interacted with via SQLAlchemy and managed with Alembic for migrations.
+
+## Rationale for SQLite
+
+*   **Simplicity & Robustness:** SQLite provides an excellent balance of features, reliability, and ease of use for a local application. It's serverless and requires no complex setup.
+*   **Python/FastAPI Integration:** Excellent libraries (Python's built-in `sqlite3`) and ORM support (SQLAlchemy) make integration straightforward and align with the backend rule best practices.
+*   **Structured Data & Migrations:** It's a relational database capable of handling structured data. Alembic can be used for schema migrations, ensuring an organized evolution of the database structure.
+*   **Performance:** More than adequate for a single-user local application.
+*   **Local First & Privacy:** Aligns perfectly with the project goal of being a local application with data stored on the user's machine.
+*   **Google Sheets Sync:** Relational data from SQLite can be readily transformed into a tabular format suitable for synchronization with Google Sheets.
+
+## Considered Alternatives
+
+1.  **Supabase (Backend-as-a-Service Platform):**
+    *   **Pros:** Offers a managed PostgreSQL database, integrated authentication, storage, real-time capabilities, and a Python client library. Could accelerate development of cloud-connected features and offers good scalability if the project were to move beyond a purely local scope.
+    *   **Cons for Current Project Scope:**
+        *   **External Dependency:** Requires an internet connection to a Supabase project, deviating from the core "fully local" requirement for the primary database.
+        *   **Complexity for Local-Only:** Adds setup complexity (Supabase project creation, API key management) if the primary goal is a simple local database.
+        *   **Tooling Mismatch:** The `mcp_supabase_*` tools are designed for Supabase BaaS, not direct local SQLite interaction.
+    *   **Conclusion:** While powerful, Supabase BaaS is not aligned with the immediate requirement for a simple, fully local database. It remains an interesting option for future consideration if the project scope expands to include significant cloud-based features or user accounts.
 
 2.  **JSON Files / Flat Files (CSV, YAML):**
     *   Pros: Extremely simple for basic data, human-readable (JSON/YAML).
-    *   Cons: Inefficient for querying/updating, managing data integrity and relationships is manual, concurrency issues (less relevant here).
+    *   Cons: Inefficient for querying/updating, managing data integrity and relationships is manual.
 
 3.  **TinyDB:**
     *   Pros: Lightweight document DB, pure Python, stores data in JSON.
@@ -39,24 +56,11 @@ The "job-hunt" application requires a local data storage solution to persist out
 
 4.  **DuckDB:**
     *   Pros: Fast analytical queries, can query various file formats directly.
-    *   Cons: Potentially overkill for primary transactional storage; more OLAP-focused.
+    *   Cons: Potentially overkill for primary transactional storage; more OLAP-focused for this application's needs.
 
-## Decision
+## Consequences of Choosing SQLite
 
-**SQLite** is chosen as the primary local database solution for the "job-hunt" application.
-
-## Rationale
-
-*   **Simplicity & Robustness:** SQLite provides a good balance of features, reliability, and ease of use for a local application. It's serverless and requires no complex setup.
-*   **Python/FastAPI Integration:** Excellent libraries and ORM support (like SQLAlchemy with FastAPI) make integration straightforward.
-*   **Structured Data:** It's a relational database, capable of handling structured data and relationships, which will be beneficial for storing tool outputs and potential future features like tracking job applications.
-*   **Performance:** More than adequate for a single-user local application.
-*   **Google Sheets Sync:** Relational data from SQLite can be readily transformed into a tabular format suitable for synchronization with Google Sheets.
-
-While flat files are simpler for very basic needs, they lack the querying and data integrity features that SQLite offers. TinyDB is a good lightweight option but SQLite provides more robust relational capabilities. DuckDB is powerful but more suited for analytical workloads rather than the primary application database in this context.
-
-## Consequences
-
-*   The application will have a dependency on SQLite (which is built into Python, so no external installation is usually needed).
-*   Data will be stored in a single `.sqlite` file, making it portable and easy to back up.
-*   Development will involve choosing an appropriate way to interact with SQLite (e.g., SQLAlchemy ORM, or direct SQL queries via `sqlite3` module). 
+*   The application will have a dependency on SQLite (which is built into Python).
+*   SQLAlchemy will be used as the ORM for database interaction, and Alembic for migrations.
+*   Data will be stored in a single `.sqlite` file in the `backend` directory (e.g., `backend/job_hunt.db`), making it portable and easy to back up.
+*   All core database operations will be local and not require an internet connection. 

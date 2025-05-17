@@ -10,16 +10,22 @@ This document outlines the initial tasks to set up the "job-hunt" project struct
 
 ### Phase 1: Project Foundation & Backend Setup
 
-- [ ] **Task Title:** Initialize Python project with Poetry. (Assignee: [Dev], PRD: `docs/PRD.md#6.1`, Due: [Date])
-    - *Notes:* Setup `pyproject.toml` with basic dependencies (Python, FastAPI, SQLAlchemy, Pydantic, Ruff, Pytest, aiosqlite, google-api-python-client, gspread).
+- [ ] **Task Title:** Initialize Python project with Poetry and add initial dependencies. (Assignee: [Dev], PRD: `docs/PRD.md#6.1`, Due: [Date])
+    - *Notes:* `pyproject.toml` with Python, FastAPI, Uvicorn, Pydantic, SQLAlchemy, aiosqlite, Ruff, Pytest, httpx, Alembic, google-api-python-client, gspread. Run `poetry lock && poetry install`.
+- [ ] **Task Title:** Create Supabase project and configure environment variables. (Assignee: [Dev], PRD: `docs/PRD.md#6.3.1`, Due: [Date])
+    - *Notes:* Set up a new project in Supabase. Create a `.env` file in `backend/` with `SUPABASE_URL` and `SUPABASE_KEY` (anon key for now). Add `.env` to `.gitignore`.
+- [ ] **Task Title:** Implement Supabase client initialization and configuration. (Assignee: [Dev], PRD: `docs/PRD.md#6.3.1`, Due: [Date])
+    - *Notes:* Create `backend/app/config.py` (Pydantic BaseSettings) and `backend/app/core/supabase_client.py` as per `docs/rules/backend.md`.
 - [ ] **Task Title:** Create initial FastAPI application structure. (Assignee: [Dev], PRD: `docs/PRD.md#6.1`, Due: [Date])
-    - *Notes:* Implement base according to `docs/folder-structure.md` and `docs/rules/backend.md`. Create `main.py`, `db/database.py` (async setup), initial models/schemas folders.
+    - *Notes:* Implement base according to `docs/folder-structure.md` and `docs/rules/backend.md`. Create `main.py`, `app/db/database.py` (async setup), `app/models/` folders.
 - [ ] **Task Title:** Setup SQLite database and SQLAlchemy ORM. (Assignee: [Dev], PRD: `docs/PRD.md#6.3`, Due: [Date])
-    - *Notes:* Define `Base`, `AsyncSessionLocal`, `async_engine`. Implement `get_async_db` dependency. Create basic ORM models for a generic "ToolOutput" or similar, if needed for early tools.
+    - *Notes:* Define `Base`, `AsyncSessionLocal`, `async_engine` in `app/db/database.py`. Implement `get_async_db` dependency. Create basic ORM models for a generic "ToolOutput" or similar if needed for early tools in `app/models/`.
 - [ ] **Task Title:** Implement Alembic for database migrations. (Assignee: [Dev], PRD: `docs/PRD.md#6.3`, Due: [Date])
-    - *Notes:* Configure Alembic for async SQLAlchemy with SQLite. Create initial migration.
-- [ ] **Task Title:** Setup basic API endpoint for testing. (Assignee: [Dev], PRD: `docs/PRD.md#6.1`, Due: [Date])
-    - *Notes:* Simple `/health` or `/ping` endpoint to verify FastAPI setup.
+    - *Notes:* Configure Alembic for async SQLAlchemy with SQLite (e.g., in `backend/alembic/` or `backend/app/db/`). Create initial migration based on models.
+- [ ] **Task Title:** Setup basic API endpoint for testing database connection. (Assignee: [Dev], PRD: `docs/PRD.md#6.1`, Due: [Date])
+    - *Notes:* Simple `/health` or `/ping` endpoint in FastAPI that performs a basic query using SQLAlchemy session (e.g., `session.execute(select(1))`) to verify DB connection.
+- [ ] **Task Title:** Define initial SQLAlchemy models. (Assignee: [Dev], PRD: `docs/PRD.md#6.3`, Due: [Date])
+    - *Notes:* Create initial models in `backend/app/models/` (e.g., for JobApplication, Company, Contact). Ensure they inherit from `Base` in `app.db.database`.
 
 ### Phase 2: Frontend Setup
 
@@ -70,10 +76,14 @@ This document outlines the initial tasks to set up the "job-hunt" project struct
 ## ✅ Completed Tasks
 
 - [x] **Completed Task Title:** Define initial PRD. (Completed: 17.5.2025, Relevant Files: `docs/PRD.md`)
-- [x] **Completed Task Title:** Decide on Database and Document in ADR. (Completed: 17.5.2025, Relevant Files: `docs/adr/ADR-001-database-choice.md`)
+- [x] **Completed Task Title:** Decide on Database and Document in ADR. (Completed: October 26, 2023, Relevant Files: `docs/adr/ADR-001-database-choice.md`)
 - [x] **Completed Task Title:** Define Technology Stack. (Completed: 17.5.2025, Relevant Files: `docs/tech-stack.md`)
 - [x] **Completed Task Title:** Define Folder Structure. (Completed: 17.5.2025, Relevant Files: `docs/folder-structure.md`)
 - [x] **Completed Task Title:** Update Backend & Frontend Rules. (Completed: 17.5.2025, Relevant Files: `docs/rules/backend.md`, `docs/rules/frontend.md`)
+- [x] **Completed Task Title:** Initialize Python project with Poetry and add initial dependencies. (Completed: October 26, 2023, Relevant Files: `backend/pyproject.toml`)
+- [x] **Completed Task Title:** Create initial FastAPI application structure and health check. (Completed: October 26, 2023, Relevant Files: `backend/app/main.py`, `backend/app/config.py`, `backend/app/db/database.py`)
+- [x] **Completed Task Title:** Setup SQLite database and SQLAlchemy ORM. (Completed: October 26, 2023, Relevant Files: `backend/app/db/database.py`)
+- [x] **Completed Task Title:** Implement Alembic for database migrations (Initial Setup). (Completed: October 26, 2023, Relevant Files: `backend/alembic.ini`, `backend/alembic/env.py`)
 
 ---
 

@@ -91,13 +91,12 @@ The common characteristic is a need for tools to make the job search process mor
 *   **Static Content:** Markdown files for documentation and potentially parts of the homepage.
 
 ### 6.3. Data Storage
-*   **Primary:** SQLite for local data storage (e.g., saved tool outputs, user notes if implemented). (Decision documented in `docs/adr/ADR-001-database-choice.md`).
+*   **Primary:** SQLite for local data storage (e.g., saved tool outputs, user notes if implemented). To be used with SQLAlchemy and Alembic for migrations. (Decision documented in `docs/adr/ADR-001-database-choice.md`).
 *   **Export:** Functionality to export data to CSV.
 *   **Google Sheets Support (Optional Feature):**
     *   Provide functionality for optional two-way synchronization (import/export) between the local SQLite database and a user's Google Sheets.
     *   This feature will require user authentication with Google and explicit user action to initiate sync.
-    *   This allows users to manage and access parts of their job search data via Google Sheets, accessible from anywhere, while the application remains primarily local.
-    *   The design must clearly delineate this as an optional feature that, if unused, keeps the application entirely local and offline.
+    *   The backend will facilitate this interaction, reading/writing from/to the local SQLite DB.
 
 ### 6.4. Modularity
 *   The backend `tools/` directory should be designed to allow for straightforward addition of new tool modules. Each tool might have its own subdirectory or a set of clearly defined files.
