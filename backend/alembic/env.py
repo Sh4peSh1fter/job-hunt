@@ -29,8 +29,10 @@ if config.config_file_name is not None:
 # --- Alembic Autogenerate Setup ---
 from app.db.database import Base  # Import your Base
 # Import all your models here so Base.metadata is populated
-# e.g., from app.models.user import User
-# from app.models.item import Item # Add this line when you have models
+from app.models.company import Company
+from app.models.job_source import JobSource
+from app.models.job_application import JobApplication
+from app.models.application_event import ApplicationEvent
 target_metadata = Base.metadata
 # --- End Alembic Autogenerate Setup ---
 

@@ -1,0 +1,62 @@
+import enum
+
+class CompanyPhaseEnum(str, enum.Enum):
+    PRE_SEED = "Pre-Seed"
+    SEED = "Seed"
+    EARLY = "Early"
+    GROWTH = "Growth"
+    EXPANSION = "Expansion"
+    EXIT = "Exit"
+
+class EmploymentTypeEnum(str, enum.Enum):
+    FULL_TIME = "Full-time"
+    PART_TIME = "Part-time"
+    CONTRACT = "Contract"
+    INTERNSHIP = "Internship"
+    TEMPORARY = "Temporary"
+    VOLUNTEER = "Volunteer"
+
+class ApplicationStatusEnum(str, enum.Enum):
+    CONSIDERING = "Considering"
+    NOT_PURSUING = "Not Pursuing"
+    APPLIED = "Applied"
+    IN_PROGRESS = "In Progress"
+    WITHDRAWN = "Withdrawn"
+    OFFERED = "Offered"
+    REJECTED = "Rejected"
+    EXPIRED = "Expired"
+
+class ApplicationEventTypeEnum(str, enum.Enum):
+    APPLICATION_SUBMITTED = "Application Submitted"
+    RESUME_VIEWED = "Resume Viewed"
+    SCREENING_CALL_SCHEDULED = "Screening Call Scheduled"
+    SCREENING_CALL_COMPLETED = "Screening Call Completed"
+    TECHNICAL_INTERVIEW_SCHEDULED = "Technical Interview Scheduled"
+    TECHNICAL_INTERVIEW_COMPLETED = "Technical Interview Completed"
+    HR_INTERVIEW_SCHEDULED = "HR Interview Scheduled"
+    HR_INTERVIEW_COMPLETED = "HR Interview Completed"
+    TAKE_HOME_ASSIGNMENT_SENT = "Take-home Assignment Sent"
+    TAKE_HOME_ASSIGNMENT_SUBMITTED = "Take-home Assignment Submitted"
+    FINAL_INTERVIEW_SCHEDULED = "Final Interview Scheduled"
+    FINAL_INTERVIEW_COMPLETED = "Final Interview Completed"
+    FOLLOW_UP_SENT = "Follow-up Sent"
+    THANK_YOU_NOTE_SENT = "Thank You Note Sent"
+    OFFER_RECEIVED = "Offer Received"
+    OFFER_TERMS_DISCUSSED = "Offer Terms Discussed"
+    OFFER_ACCEPTED = "Offer Accepted"
+    OFFER_DECLINED = "Offer Declined"
+    APPLICATION_WITHDRAWN = "Application Withdrawn"
+    REJECTION_RECEIVED = "Rejection Received"
+    FEEDBACK_REQUESTED = "Feedback Requested"
+    FEEDBACK_RECEIVED = "Feedback Received"
+    NETWORKING_CALL = "Networking Call"
+    INFORMATIONAL_INTERVIEW = "Informational Interview"
+    NOTE_ADDED = "Note Added"
+
+class JobSourceTypeEnum(str, enum.Enum):
+    JOB_BOARD = "Job Board"
+    RECRUITER = "Recruiter"
+    COMPANY_WEBSITE = "Company Website"
+    NETWORKING = "Networking"
+    REFERRAL_PROGRAM = "Referral Program"
+    OTHER = "Other" 
