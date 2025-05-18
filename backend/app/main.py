@@ -2,14 +2,21 @@ from fastapi import FastAPI, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import text # For executing a raw SQL query
 
-from .db.database import get_async_db #, settings # If settings were needed here
-# from .config import settings # If you need app settings from config.py
+from .db.database import get_async_db
+from .routers import api_router # Import the main API router
+# from app.core.supabase_client import get_supabase_client # Example - remove if not used
 
 app = FastAPI(
     title="Job Hunt API",
     description="API for the Job Hunt application, providing tools and data management.",
-    version="0.1.0"
+    version="0.1.0",
+    # openapi_url="/api/v1/openapi.json",
+    # docs_url="/api/v1/docs",
+    # redoc_url="/api/v1/redoc"
 )
+
+# Include the main API router with the /api/v1 prefix
+app.include_router(api_router, prefix="/api/v1")
 
 @app.get("/health", tags=["Health"])
 async def health_check(db: AsyncSession = Depends(get_async_db)):
@@ -17,7 +24,6 @@ async def health_check(db: AsyncSession = Depends(get_async_db)):
     Performs a health check of the API and database connection.
     """
     try:
-        # Try to execute a simple query to check DB connection
         result = await db.execute(text("SELECT 1"))
         if result.scalar_one() == 1:
             db_status = "ok"

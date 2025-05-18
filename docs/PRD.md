@@ -71,13 +71,112 @@ The common characteristic is a need for tools to make the job search process mor
     *   Provides suggestions or a score for relevance.
 *   **Status:** Planned for a future iteration. Initial architecture should not preclude its addition.
 
-## 5. Design and UX Considerations
+## 5. User Interface and User Experience (UI/UX) Design
 
-*   **Simplicity:** The interface should be clean, intuitive, and easy to navigate.
-*   **Responsiveness:** The application must be responsive and work well on various screen sizes (desktop-focused initially).
-*   **Performance:** Tools should provide results quickly.
-*   **Clarity:** Information should be presented in a clear and understandable manner.
-*   **Frontend Basis:** The UI should be based on the [Tailwind Next.js Starter Blog](https://timlrx.github.io/tailwind-nextjs-starter-blog/) for its clean layout and responsive design.
+This section outlines the planned user interface (UI) design, user experience (UX) flow, and overall aesthetic for the "job-hunt" application.
+
+**Last Updated:** May 19, 2024
+
+### 5.1. Overall Look and Feel
+
+*   **Base Inspiration:** The UI will draw inspiration from the **Tailwind Next.js Starter Blog** ([https://github.com/timlrx/tailwind-nextjs-starter-blog](https://github.com/timlrx/tailwind-nextjs-starter-blog)), adapted to suit a utility-focused application.
+*   **Aesthetic:** Clean, modern, professional, and minimalist. The focus will be on usability and clarity, ensuring that users can easily access and operate the tools.
+*   **Color Palette:** (To be defined - suggest a simple, professional palette. Perhaps a primary accent color with neutral grays for text and backgrounds.)
+*   **Typography:** (To be defined - suggest clear, readable sans-serif fonts, potentially using `next/font` for optimization as per `frontend.md`.)
+*   **Responsiveness:** The application must be responsive and provide a good user experience on desktop and tablet devices. Mobile responsiveness is a secondary concern for initial MVP but should be kept in mind for component design.
+
+### 5.2. Navigation Structure
+
+A persistent global header will contain the primary navigation:
+
+*   **Header:**
+    *   **Application Title/Logo (Optional):** "Job Hunt" or a simple icon on the left.
+    *   **Navigation Links (Right or Center):**
+        *   **"Guide"**: Links to the homepage (`/`).
+        *   **"Tools"**: Links to the tools overview page (`/tools`).
+
+### 5.3. Page Layouts and Wireframes (Text-based Descriptions)
+
+#### 5.3.1. Global Layout
+
+*   **Header:** Fixed or sticky at the top, containing navigation.
+*   **Main Content Area:** Below the header, occupying the majority of the viewport. This area will render the content of the current page.
+*   **Footer (Optional):** A small, unobtrusive footer at the bottom, possibly containing a copyright notice or version information.
+
+#### 5.3.2. Guide Page (`/`)
+
+*   **Purpose:** Introduction, user guide, project information.
+*   **Layout:**
+    *   `+------------------------------------+"`
+    *   `| Header (Nav: Guide | Tools)         |"`
+    *   `+------------------------------------+"`
+    *   `| Page Title (e.g., "Job Hunt Guide") |"`
+    *   `+------------------------------------+"`
+    *   `| Main Content Area (Markdown Text)  |"`
+    *   `| - Section 1                        |"`
+    *   `| - Section 2                        |"`
+    *   `| - ...                              |"`
+    *   `+------------------------------------+"`
+    *   `| Footer (Optional)                  |"`
+    *   `+------------------------------------+"`
+*   **Content:** Primarily text-based, rendered from Markdown. Should be easily readable with clear headings and paragraphs.
+
+#### 5.3.3. Tools Overview Page (`/tools`)
+
+*   **Purpose:** Display available tools and allow navigation to them.
+*   **Layout:**
+    *   `+------------------------------------+"`
+    *   `| Header (Nav: Guide | Tools)         |"`
+    *   `+------------------------------------+"`
+    *   `| Page Title (e.g., "Available Tools")|"`
+    *   `+------------------------------------+"`
+    *   `| Tool Card Grid/List                |"`
+    *   `| +-----------+  +-----------+       |"`
+    *   `| | Tool 1    |  | Tool 2    |       |"`
+    *   `| | (Desc)    |  | (Desc)    |       |"`
+    *   `| +-----------+  +-----------+       |"`
+    *   `| +-----------+  +-----------+       |"`
+    *   `| | Tool 3    |  | ...       |       |"`
+    *   `| | (Desc)    |  |           |       |"`
+    *   `| +-----------+  +-----------+       |"`
+    *   `+------------------------------------+"`
+    *   `| Footer (Optional)                  |"`
+    *   `+------------------------------------+"`
+*   **Tool Cards:** Each card will display the tool's name, a short description, and potentially an icon. Clicking a card navigates to the tool's specific page.
+
+#### 5.3.4. Individual Tool Page (e.g., `/tools/keyword-analyzer`)
+
+*   **Purpose:** Provide the UI for a specific tool.
+*   **Layout (Example: Keyword Analyzer):**
+    *   `+------------------------------------+"`
+    *   `| Header (Nav: Guide | Tools)         |"`
+    *   `+------------------------------------+"`
+    *   `| Page Title (e.g., "Keyword Freq.")  |"`
+    *   `| Brief Instructions                 |"`
+    *   `+------------------------------------+"`
+    *   `| Input Area:                        |"`
+    *   `| +--------------------------------+ |"`
+    *   `| | Text Area for Job Desc.      | |"`
+    *   `| +--------------------------------+ |"`
+    *   `| [Analyze Button]                   |"`
+    *   `+------------------------------------+"`
+    *   `| Results Area:                      |"`
+    *   `| +--------------------------------+ |"`
+    *   `| | Keyword | Count | ...          | |"`
+    *   `| | ---------|-------|----          | |"`
+    *   `| | Word 1  | 10    |              | |"`
+    *   `| | Word 2  | 8     |              | |"`
+    *   `| +--------------------------------+ |"`
+    *   `+------------------------------------+"`
+    *   `| Footer (Optional)                  |"`
+    *   `+------------------------------------+"`
+*   **Content:** Specific to each tool. Must include clear input fields, action buttons, and a well-formatted results display area.
+
+### 5.4. Key UI Components & Styling
+
+*   **Component Library:** We will primarily use **Shadcn/UI** components ([https://ui.shadcn.com/](https://ui.shadcn.com/)) for building blocks like buttons, cards, input fields, tables, etc. This ensures a consistent look and feel and accelerates development. Custom components specific to a tool's unique needs will be built by composing Shadcn/UI elements or from scratch if necessary.
+*   **Styling:** **Tailwind CSS** will be the primary styling methodology, configured as per `frontend.md`. Global styles will be kept to a minimum in `frontend/app/globals.css`.
+*   **Interactivity:** Client-side interactivity will be handled using React state and hooks. Server Components will be favored where possible for performance, with Client Components (`'use client'`) used for interactive sections.
 
 ## 6. Technical Considerations
 

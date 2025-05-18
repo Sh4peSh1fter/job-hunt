@@ -24,21 +24,21 @@ This document outlines the initial tasks to set up the "job-hunt" project struct
     - *Notes:* Configure Alembic for async SQLAlchemy with SQLite (e.g., in `backend/alembic/` or `backend/app/db/`). Create initial migration based on models.
 - [ ] **Task Title:** Setup basic API endpoint for testing database connection. (Assignee: [Dev], PRD: `docs/PRD.md#6.1`, Due: [Date])
     - *Notes:* Simple `/health` or `/ping` endpoint in FastAPI that performs a basic query using SQLAlchemy session (e.g., `session.execute(select(1))`) to verify DB connection.
-- [ ] **Task Title:** Define initial SQLAlchemy models. (Assignee: [Dev], PRD: `docs/PRD.md#6.3`, Due: [Date])
-    - *Notes:* Create initial models in `backend/app/models/` (e.g., for JobApplication, Company, Contact). Ensure they inherit from `Base` in `app.db.database`.
 
 ### Phase 2: Frontend Setup
 
-- [ ] **Task Title:** Initialize Next.js project. (Assignee: [Dev], PRD: `docs/PRD.md#6.2`, Due: [Date])
-    - *Notes:* Use `create-next-app`. Setup according to `docs/folder-structure.md` and `docs/rules/frontend.md` (App Router).
-- [ ] **Task Title:** Integrate Tailwind CSS. (Assignee: [Dev], PRD: `docs/PRD.md#6.2`, Due: [Date])
-    - *Notes:* Configure Tailwind CSS and PostCSS as per Next.js guidelines.
-- [ ] **Task Title:** Setup Shadcn/UI. (Assignee: [Dev], PRD: `docs/PRD.md#6.2`, Due: [Date])
-    - *Notes:* Initialize Shadcn/UI and add a few basic components (e.g., Button, Card).
-- [ ] **Task Title:** Create basic frontend layout and navigation. (Assignee: [Dev], PRD: `docs/PRD.md#4.1`, `docs/PRD.md#5.1`, Due: [Date])
-    - *Notes:* Based on Tailwind Next.js Starter Blog. Implement root layout, header, and placeholders for "Homepage/Guide" and "Tools" sections.
-- [ ] **Task Title:** Implement static Homepage/Guide page. (Assignee: [Dev], PRD: `docs/PRD.md#5.1`, Due: [Date])
-    - *Notes:* Create a simple page to display Markdown content from `docs/guide.md` (to be created).
+- [x] **Task Title:** Initialize Next.js project in `frontend/` directory. (Completed: May 19, 2024, Relevant Files: `frontend/`)
+    - *Notes:* Use `create-next-app` with TypeScript. Setup according to `docs/folder-structure.md` and `docs/rules/frontend.md` (App Router).
+- [x] **Task Title:** Integrate Tailwind CSS into the Next.js project. (Completed: May 19, 2024, Relevant Files: `frontend/tailwind.config.ts`, `frontend/postcss.config.mjs`)
+    - *Notes:* Configure Tailwind CSS and PostCSS as per Next.js and Tailwind documentation.
+- [x] **Task Title:** Setup Shadcn/UI in the Next.js project. (Completed: May 19, 2024, Relevant Files: `frontend/src/components/ui/`, `frontend/src/lib/utils.ts`)
+    - *Notes:* Initialize Shadcn/UI. Add a few basic components (e.g., Button, Card) to `frontend/components/ui/`.
+- [x] **Task Title:** Implement global frontend layout and navigation. (Completed: May 19, 2024, Relevant Files: `frontend/src/app/layout.tsx`)
+    - *Notes:* Create root layout (`frontend/app/layout.tsx`). Implement header with "Guide" and "Tools" navigation links. Optional: simple footer.
+- [x] **Task Title:** Create static "Guide" page. (Completed: May 19, 2024, Relevant Files: `frontend/src/app/page.tsx`)
+    - *Notes:* Implement `frontend/src/app/page.tsx` (or `/`) to display static content. Initially, can be placeholder text or load from a simple Markdown file if time permits.
+- [x] **Task Title:** Create "Tools Overview" page. (Completed: May 19, 2024, Relevant Files: `frontend/src/app/tools/page.tsx`)
+    - *Notes:* Implement `frontend/app/(pages)/tools/page.tsx`. Display a list/grid of placeholder cards for future tools.
 
 ### Phase 3: First Tool - Keyword Frequency Analyzer
 
@@ -80,15 +80,18 @@ This document outlines the initial tasks to set up the "job-hunt" project struct
 - [x] **Completed Task Title:** Define Technology Stack. (Completed: 17.5.2025, Relevant Files: `docs/tech-stack.md`)
 - [x] **Completed Task Title:** Define Folder Structure. (Completed: 17.5.2025, Relevant Files: `docs/folder-structure.md`)
 - [x] **Completed Task Title:** Update Backend & Frontend Rules. (Completed: 17.5.2025, Relevant Files: `docs/rules/backend.md`, `docs/rules/frontend.md`)
-- [x] **Completed Task Title:** Initialize Python project with Poetry and add initial dependencies. (Completed: October 26, 2023, Relevant Files: `backend/pyproject.toml`)
-- [x] **Completed Task Title:** Create initial FastAPI application structure and health check. (Completed: October 26, 2023, Relevant Files: `backend/app/main.py`, `backend/app/config.py`, `backend/app/db/database.py`)
-- [x] **Completed Task Title:** Setup SQLite database and SQLAlchemy ORM. (Completed: October 26, 2023, Relevant Files: `backend/app/db/database.py`)
-- [x] **Completed Task Title:** Implement Alembic for database migrations (Initial Setup). (Completed: October 26, 2023, Relevant Files: `backend/alembic.ini`, `backend/alembic/env.py`)
-- [x] **Completed Task Title:** Define initial SQLAlchemy models and Enums. (Completed: October 26, 2023, Relevant Files: `backend/app/models/`)
-- [x] **Completed Task Title:** Generate and apply initial Alembic migration. (Completed: October 26, 2023, Relevant Files: `backend/alembic/versions/`)
-- [x] **Completed Task Title:** Setup/Verify API endpoint for testing database connection. (Completed: October 26, 2023, Relevant Files: `backend/app/main.py`)
-- [x] **Completed Task Title:** Setup backend testing framework (Pytest) with initial test. (Completed: October 26, 2023, Relevant Files: `backend/pyproject.toml`, `backend/tests/test_main.py`)
-- [x] **Completed Task Title:** Setup Linters/Formatters (Ruff) and run initial checks. (Completed: October 26, 2023, Relevant Files: `backend/pyproject.toml`)
+- [x] **Task Title:** Initialize Python project with Poetry and add initial dependencies. (Completed: October 26, 2023, Relevant Files: `backend/pyproject.toml`)
+- [x] **Task Title:** Create initial FastAPI application structure and health check. (Completed: October 26, 2023, Relevant Files: `backend/app/main.py`, `backend/app/config.py`, `backend/app/db/database.py`)
+- [x] **Task Title:** Setup SQLite database and SQLAlchemy ORM. (Completed: October 26, 2023, Relevant Files: `backend/app/db/database.py`)
+- [x] **Task Title:** Implement Alembic for database migrations (Initial Setup). (Completed: October 26, 2023, Relevant Files: `backend/alembic.ini`, `backend/alembic/env.py`)
+- [x] **Task Title:** Generate and apply initial Alembic migration. (Completed: October 26, 2023, Relevant Files: `backend/alembic/versions/`)
+- [x] **Task Title:** Define initial SQLAlchemy models (Company, JobApplication, JobSource, Enums). (Completed: May 19, 2024, Relevant Files: `backend/app/models/`, PRD: `docs/PRD.md#6.3`)
+- [x] **Task Title:** Create Pydantic schemas for SQLAlchemy models (Company, JobApplication, JobSource). (Completed: May 19, 2024, Relevant Files: `backend/app/schemas/`, PRD: `docs/PRD.md#6.1`)
+- [x] **Task Title:** Implement CRUD services and routers for Company, JobApplication, and JobSource models. (Completed: May 19, 2024, Relevant Files: `backend/app/routers/`, `backend/app/services/`, PRD: `docs/PRD.md#6.1`)
+- [x] **Task Title:** Setup backend testing framework (Pytest) with shared fixtures and initial tests. (Completed: May 19, 2024, Relevant Files: `backend/pyproject.toml`, `backend/tests/test_main.py`, `backend/tests/conftest.py`, `backend/tests/test_companies.py`, `backend/tests/test_job_applications.py`, `backend/tests/test_job_sources.py`)
+- [x] **Task Title:** Setup Linters/Formatters (Ruff) and run initial checks. (Completed: October 26, 2023, Relevant Files: `backend/pyproject.toml`)
+- [x] **Completed Task Title:** Create API documentation for Company, JobApplication, and JobSource endpoints. (Completed: May 19, 2024, Relevant Files: `docs/api/companies_api.md`, `docs/api/job_applications_api.md`, `docs/api/job_sources_api.md`)
+- [x] **Completed Task Title:** Design and document frontend UI/UX structure. (Completed: May 19, 2024, Relevant Files: `docs/PRD.md#5. User Interface and User Experience (UI/UX) Design`)
 
 ---
 
