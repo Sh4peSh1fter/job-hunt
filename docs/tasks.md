@@ -84,6 +84,11 @@ This document outlines the initial tasks to set up the "job-hunt" project struct
 - [x] **Completed Task Title:** Create initial FastAPI application structure and health check. (Completed: October 26, 2023, Relevant Files: `backend/app/main.py`, `backend/app/config.py`, `backend/app/db/database.py`)
 - [x] **Completed Task Title:** Setup SQLite database and SQLAlchemy ORM. (Completed: October 26, 2023, Relevant Files: `backend/app/db/database.py`)
 - [x] **Completed Task Title:** Implement Alembic for database migrations (Initial Setup). (Completed: October 26, 2023, Relevant Files: `backend/alembic.ini`, `backend/alembic/env.py`)
+- [x] **Completed Task Title:** Define initial SQLAlchemy models and Enums. (Completed: October 26, 2023, Relevant Files: `backend/app/models/`)
+- [x] **Completed Task Title:** Generate and apply initial Alembic migration. (Completed: October 26, 2023, Relevant Files: `backend/alembic/versions/`)
+- [x] **Completed Task Title:** Setup/Verify API endpoint for testing database connection. (Completed: October 26, 2023, Relevant Files: `backend/app/main.py`)
+- [x] **Completed Task Title:** Setup backend testing framework (Pytest) with initial test. (Completed: October 26, 2023, Relevant Files: `backend/pyproject.toml`, `backend/tests/test_main.py`)
+- [x] **Completed Task Title:** Setup Linters/Formatters (Ruff) and run initial checks. (Completed: October 26, 2023, Relevant Files: `backend/pyproject.toml`)
 
 ---
 

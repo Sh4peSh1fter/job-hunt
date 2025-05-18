@@ -9,9 +9,22 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from alembic import context
 
+# Import your app's Base and models here for Alembic autogenerate
+from app.db.database import Base
+from app.models.company import Company  # noqa: F401
+from app.models.job_source import JobSource  # noqa: F401
+from app.models.job_application import JobApplication  # noqa: F401
+from app.models.application_event import ApplicationEvent  # noqa: F401
+
+
 # Add the project's root directory (backend/) to the Python path
 # to ensure that the 'app' module can be found.
+# This needs to be before model imports if they rely on 'app' being in path,
+# but models themselves are imported from 'app.'
+# so this specific placement might need adjustment based on execution context.
+# For now, assuming `prepend_sys_path = .` in alembic.ini handles it, but being explicit here.
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -27,13 +40,7 @@ if config.config_file_name is not None:
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 # --- Alembic Autogenerate Setup ---
-from app.db.database import Base  # Import your Base
-# Import all your models here so Base.metadata is populated
-from app.models.company import Company
-from app.models.job_source import JobSource
-from app.models.job_application import JobApplication
-from app.models.application_event import ApplicationEvent
-target_metadata = Base.metadata
+target_metadata = Base.metadata # Base is populated by importing model files
 # --- End Alembic Autogenerate Setup ---
 
 # other values from the config, defined by the needs of env.py,

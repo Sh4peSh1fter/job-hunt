@@ -9,7 +9,7 @@ class Company(Base):
     __tablename__ = "companies"
 
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, required=True, unique=True, index=True)
+    name = Column(String, unique=True, index=True, nullable=False)
     foundation_date = Column(DateTime, nullable=True)
     industry = Column(String, nullable=True)
     size = Column(String, nullable=True)

@@ -15,7 +15,7 @@ dependencies = [
     "google-api-python-client (>=2.169.0,<3.0.0)",
     "gspread (>=6.2.1,<7.0.0)",
     "pydantic (>=2.11.4,<3.0.0)",
-    "greenlet (>=3.2.2,<4.0.0)"
+    "greenlet (>=3.2.2,<4.0.0)",
 ]
 
 
@@ -28,4 +28,24 @@ pytest = "^8.3.5"
 ruff = "^0.11.10"
 httpx = "^0.28.1"
 alembic = "^1.15.2"
+pytest-asyncio = "^0.26.0"
+
+[tool.pytest.ini_options]
+python_files = "tests.py test_*.py *_test.py"
+asyncio_mode = "auto"
+pythonpath = ["."]
+
+[tool.ruff]
+line-length = 88
+src = ["app", "tests"]
+# Select a base set of rules explicitly, e.g., pycodestyle (E) and Pyflakes (F)
+# You can add more rule codes as needed.
+# select = ["E", "F"]
+# For a stricter set, consider something like:
+# select = ["A", "B", "C4", "E", "F", "I", "N", "PLC", "PLE", "PLR", "PLW", "RUF"]
+
+# You can also exclude files or directories if needed
+# extend-exclude = [
+#    "alembic/versions/*", # Often auto-generated, might not need strict linting
+# ]
 
