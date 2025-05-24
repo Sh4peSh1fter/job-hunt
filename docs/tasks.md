@@ -51,6 +51,19 @@ This document outlines the initial tasks to set up the "job-hunt" project struct
 - [ ] **Task Title:** Integrate Keyword Frequency Analyzer frontend with backend. (Assignee: [Dev], PRD: `docs/PRD.md#5.2.1`, Due: [Date])
     - *Notes:* Fetch call from Next.js to FastAPI.
 
+### Phase 4: Frontend Navigation & Data Component Pages (Option 2)
+
+- [x] **Task Title:** Update main navigation to Dashboard, Components, Tools, Guide. (Completed: May 20, 2024, Relevant Files: `frontend/src/app/layout.tsx`)
+- [x] **Task Title:** Rename `/applications` page to `/dashboard`. (Completed: May 20, 2024, Relevant Files: `frontend/src/app/(pages)/dashboard/page.tsx`)
+- [x] **Task Title:** Create `/components` hub page. (Completed: May 20, 2024, Relevant Files: `frontend/src/app/(pages)/components/page.tsx`)
+- [x] **Task Title:** Create placeholder page for Companies data. (Completed: May 20, 2024, Relevant Files: `frontend/src/app/(pages)/components/companies/page.tsx`)
+- [x] **Task Title:** Create placeholder page for Job Applications data. (Completed: May 20, 2024, Relevant Files: `frontend/src/app/(pages)/components/job-applications/page.tsx`)
+- [x] **Task Title:** Create placeholder page for Application Events data. (Completed: May 20, 2024, Relevant Files: `frontend/src/app/(pages)/components/application-events/page.tsx`)
+- [x] **Task Title:** Create placeholder page for Job Sources data. (Completed: May 20, 2024, Relevant Files: `frontend/src/app/(pages)/components/job-sources/page.tsx`)
+- [ ] **Task Title:** Implement Job Applications Dashboard UI (on `/dashboard`). (Assignee: [Dev], PRD: `docs/PRD.md#5.3` (assuming new section))
+    - [ ] Design and implement table/list view for job applications.
+    - [ ] Implement functionality to add/edit/delete job applications (placeholder for now, depends on backend).
+
 ---
 
 ## ⏳ Future Tasks / Backlog

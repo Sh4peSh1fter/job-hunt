@@ -14,8 +14,8 @@ This directory contains the FastAPI backend application for the Job Hunt project
 
     If you don't have poetry and want to install it in the virtual environment of this project itself:
     ```bash
-    python3 -m venv .venv
-    source .venv/bin/activate
+python3 -m venv .venv
+source .venv/bin/activate
     pip install poetry
     poetry init
     ```

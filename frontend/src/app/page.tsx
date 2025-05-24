@@ -10,7 +10,7 @@ export default function GuidePage() {
         This is your personal assistant to help manage and optimize your job search. 
         Navigate to the "Tools" section to explore available utilities.
       </p>
-      
+
       <section className="mt-10">
         <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
           How to Use This Application

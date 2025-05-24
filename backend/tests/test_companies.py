@@ -91,7 +91,7 @@ async def test_update_company(client: AsyncClient):
     assert updated_company_data["id"] == company_id
     assert updated_company_data["name"] == update_payload["name"]
     assert updated_company_data["industry"] == update_payload["industry"]
-    # assert updated_company_data["notes"] == update_payload["notes"]
+    assert updated_company_data["notes"] == update_payload["notes"]
 
 @pytest.mark.asyncio
 async def test_update_company_not_found(client: AsyncClient):

@@ -6,7 +6,9 @@ from app.db.database import get_async_db
 from app.schemas.job_source import JobSource, JobSourceCreate, JobSourceUpdate
 from app.services import job_source_service
 
-router = APIRouter()
+router = APIRouter(
+    tags=["Job Sources"]
+)
 
 @router.post("/", response_model=JobSource, status_code=201)
 async def create_job_source(
@@ -18,6 +20,16 @@ async def create_job_source(
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
+@router.get("/", response_model=List[JobSource])
+async def read_job_sources(
+    skip: int = 0,
+    limit: int = 100,
+    db: AsyncSession = Depends(get_async_db)
+):
+    job_sources = await job_source_service.get_job_sources(db, skip=skip, limit=limit)
+    print(f"DEBUG: In read_job_sources, found {len(job_sources)} sources.")
+    return job_sources
+
 @router.get("/{job_source_id}", response_model=JobSource)
 async def read_job_source(
     job_source_id: int,
@@ -27,15 +39,6 @@ async def read_job_source(
     if db_job_source is None:
         raise HTTPException(status_code=404, detail="JobSource not found")
     return db_job_source
-
-@router.get("/", response_model=List[JobSource])
-async def read_job_sources(
-    skip: int = 0,
-    limit: int = 100,
-    db: AsyncSession = Depends(get_async_db)
-):
-    job_sources = await job_source_service.get_job_sources(db, skip=skip, limit=limit)
-    return job_sources
 
 @router.put("/{job_source_id}", response_model=JobSource)
 async def update_job_source(

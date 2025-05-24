@@ -21,19 +21,39 @@ export const metadata: Metadata = {
 // Simple Header component for now
 function AppHeader() {
   return (
-    <header className="bg-gray-100 shadow-md">
-      <nav className="container mx-auto px-6 py-3 flex justify-between items-center">
-        <Link href="/" className="text-xl font-semibold text-gray-700 hover:text-gray-900">
-          Job Hunt
+    <header className="px-4 lg:px-6 h-14 flex items-center">
+      <Link href="/" className="flex items-center justify-center" prefetch={false}>
+        <span className="font-semibold">Job Hunt</span>
+      </Link>
+      <nav className="ml-auto flex gap-4 sm:gap-6">
+        <Link
+          href="/dashboard"
+          className="text-sm font-medium hover:underline underline-offset-4"
+          prefetch={false}
+        >
+          Dashboard
         </Link>
-        <div className="space-x-4">
-          <Link href="/" className="text-gray-700 hover:text-gray-900">
-            Guide
-          </Link>
-          <Link href="/tools" className="text-gray-700 hover:text-gray-900">
-            Tools
-          </Link>
-        </div>
+        <Link
+          href="/components"
+          className="text-sm font-medium hover:underline underline-offset-4"
+          prefetch={false}
+        >
+          Components
+        </Link>
+        <Link
+          href="/tools"
+          className="text-sm font-medium hover:underline underline-offset-4"
+          prefetch={false}
+        >
+          Tools
+        </Link>
+        <Link
+          href="/"
+          className="text-sm font-medium hover:underline underline-offset-4"
+          prefetch={false}
+        >
+          Guide
+        </Link>
       </nav>
     </header>
   );
@@ -51,7 +71,7 @@ export default function RootLayout({
       >
         <AppHeader />
         <main className="flex-grow container mx-auto px-6 py-8">
-          {children}
+        {children}
         </main>
         {/* Optional Footer can be added here later */}
         {/* <footer className="bg-gray-100 text-center p-4 mt-auto">

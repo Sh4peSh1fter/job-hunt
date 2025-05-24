@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Depends
+from fastapi.middleware.cors import CORSMiddleware # Import CORSMiddleware
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import text # For executing a raw SQL query
 
@@ -13,6 +14,20 @@ app = FastAPI(
     # openapi_url="/api/v1/openapi.json",
     # docs_url="/api/v1/docs",
     # redoc_url="/api/v1/redoc"
+)
+
+# CORS Middleware Configuration
+origins = [
+    "http://localhost:3000",  # Allow your frontend origin
+    # You can add other origins if needed, e.g., your deployed frontend URL
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods (GET, POST, PUT, etc.)
+    allow_headers=["*"],  # Allows all headers
 )
 
 # Include the main API router with the /api/v1 prefix

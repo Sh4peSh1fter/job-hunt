@@ -6,7 +6,9 @@ from app.db.database import get_async_db
 from app.schemas.job_application import JobApplication, JobApplicationCreate, JobApplicationUpdate
 from app.services import job_application_service
 
-router = APIRouter()
+router = APIRouter(
+    tags=["Job Applications"]
+)
 
 @router.post("/", response_model=JobApplication, status_code=201)
 async def create_job_application(
@@ -27,6 +29,16 @@ async def create_job_application(
 
     return await job_application_service.create_job_application(db=db, job_application_in=job_application_in)
 
+@router.get("/", response_model=List[JobApplication])
+async def read_job_applications(
+    skip: int = 0,
+    limit: int = 100,
+    db: AsyncSession = Depends(get_async_db)
+):
+    job_applications = await job_application_service.get_job_applications(db, skip=skip, limit=limit)
+    print(f"DEBUG: In read_job_applications, found {len(job_applications)} applications.")
+    return job_applications
+
 @router.get("/{job_application_id}", response_model=JobApplication)
 async def read_job_application(
     job_application_id: int,
@@ -36,15 +48,6 @@ async def read_job_application(
     if db_job_application is None:
         raise HTTPException(status_code=404, detail="JobApplication not found")
     return db_job_application
-
-@router.get("/", response_model=List[JobApplication])
-async def read_job_applications(
-    skip: int = 0,
-    limit: int = 100,
-    db: AsyncSession = Depends(get_async_db)
-):
-    job_applications = await job_application_service.get_job_applications(db, skip=skip, limit=limit)
-    return job_applications
 
 @router.put("/{job_application_id}", response_model=JobApplication)
 async def update_job_application(
