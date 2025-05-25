@@ -13,6 +13,7 @@ import {
   updateCompany,
   deleteCompany,
 } from "@/lib/api/company-api";
+import { PlusCircle } from 'lucide-react'; // Import PlusCircle
 
 // Extend DataItem for Company specific usage if needed, though Company already has id
 interface CompanyDataItem extends Company, DataItem {}
@@ -96,9 +97,15 @@ export default function CompaniesDataPage() {
     }
   };
 
-  const handleUpdateCompany = async (originalCompany: CompanyDataItem, editedData: Partial<CompanyUpdate>) => {
+  const handleUpdateCompany = async (editedData: Partial<CompanyDataItem>, originalCompany: CompanyDataItem) => {
     try {
-      await updateCompany(originalCompany.id, editedData as CompanyUpdate); // Cast might be needed
+      // Ensure id is not in editedData or use originalCompany.id
+      const updatePayload: CompanyUpdate = { ...editedData };
+      delete (updatePayload as any).id; // Ensure id is not part of the payload for update API
+      delete (updatePayload as any).created_at;
+      delete (updatePayload as any).updated_at;
+
+      await updateCompany(originalCompany.id, updatePayload);
       fetchData(); // Refetch
       // Optionally, show a success toast/message
     } catch (err: any) {
@@ -140,7 +147,10 @@ export default function CompaniesDataPage() {
     <div className="container mx-auto py-6">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-semibold">Companies</h1>
-        <Button onClick={() => { setCompanyToUpdate(null); setIsAddDialogOpen(true); }}>Add New Company</Button>
+        <Button onClick={() => { setCompanyToUpdate(null); setIsAddDialogOpen(true); }}>
+          <PlusCircle className="mr-2 h-4 w-4" />
+          Add New Company
+        </Button>
       </div>
 
       {error && <p className="text-red-500 bg-red-100 p-3 rounded-md mb-4">Error: {error}</p>}

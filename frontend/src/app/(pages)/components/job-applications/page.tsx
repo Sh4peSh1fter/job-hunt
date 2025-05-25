@@ -24,6 +24,7 @@ import {
 } from '@/lib/api/job-application-api';
 import { fetchCompanies } from '@/lib/api/company-api';
 import { fetchJobSources } from '@/lib/api/job-source-api';
+import React from 'react';
 
 // Extend DataItem for JobApplication specific usage
 interface JobApplicationDataItem extends JobApplication, DataItem {}
@@ -97,7 +98,7 @@ const JobApplicationsPage = () => {
     }
   };
 
-  const handleUpdateJobApplication = async (originalItem: JobApplicationDataItem, data: Partial<JobApplicationUpdate>) => {
+  const handleUpdateJobApplication = async (data: Partial<JobApplicationUpdate>, originalItem: JobApplicationDataItem) => {
     try {
         const payload: JobApplicationUpdate = {
             ...data,
@@ -105,8 +106,8 @@ const JobApplicationsPage = () => {
             discovered_through_id: data.discovered_through_id ? Number(data.discovered_through_id) : undefined,
             date_posted: data.date_posted ? new Date(data.date_posted).toISOString().split('T')[0] : (data.date_posted === '' ? null : undefined),
             is_remote: data.is_remote === undefined ? undefined : Boolean(data.is_remote),
-            requested_salary_min: data.requested_salary_min ? Number(data.requested_salary_min) : null,
-            requested_salary_max: data.requested_salary_max ? Number(data.requested_salary_max) : null,
+            requested_salary_min: data.requested_salary_min ? Number(data.requested_salary_min) : (data.requested_salary_min === null ? null : undefined),
+            requested_salary_max: data.requested_salary_max ? Number(data.requested_salary_max) : (data.requested_salary_max === null ? null : undefined),
         };
         await updateJobApplication(originalItem.id, payload);
         loadData();
@@ -139,7 +140,7 @@ const JobApplicationsPage = () => {
     setIsDeleteDialogOpen(true);
   };
 
-  const jobApplicationColumnConfig: ColumnConfig<JobApplicationDataItem>[] = [
+  const jobApplicationColumnConfig: ColumnConfig<JobApplicationDataItem>[] = React.useMemo(() => [
     { accessorKey: 'actions', header: 'Actions' },
     { accessorKey: 'id', header: 'ID' },
     { accessorKey: 'title', header: 'Job Title', enableEdit: true, inputType: 'text' },
@@ -170,9 +171,9 @@ const JobApplicationsPage = () => {
     },
     // Add more columns as needed, e.g., location, is_remote, etc.
     { accessorKey: 'notes', header: 'Notes', enableEdit: true, inputType: 'textarea', minWidth: '200px' },
-  ];
+  ], [companies, jobSources]);
 
-  const jobApplicationFormFieldConfig: FormFieldConfig[] = [
+  const jobApplicationFormFieldConfig: FormFieldConfig[] = React.useMemo(() => [
     { name: 'title', label: 'Job Title', type: 'text', required: true, placeholder: 'e.g., Software Engineer' },
     {
       name: 'company_id',
@@ -213,7 +214,7 @@ const JobApplicationsPage = () => {
     { name: 'applied_through_text', label: 'Applied Via', type: 'text', placeholder: 'e.g., LinkedIn Easy Apply, Company Portal' },
     { name: 'referral', label: 'Referral', type: 'text', placeholder: 'Name of referrer or N/A' },
     { name: 'notes', label: 'Notes', type: 'textarea', placeholder: 'Any notes about this application...' },
-  ];
+  ], [companies, jobSources]);
 
   return (
     <div className="container mx-auto py-4 px-0 md:px-4">

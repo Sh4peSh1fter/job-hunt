@@ -41,7 +41,7 @@ interface GenericDataTableProps<T extends DataItem> {
   error: string | null;
   onView?: (item: T) => void;
   onEdit?: (item: T) => void;
-  onSaveEdit: (originalItem: T, editedData: Partial<T>) => Promise<void>;
+  onSaveEdit?: (updatedItem: Partial<T>, originalItem: T) => Promise<void>;
   onDelete?: (item: T) => void;
   itemType?: string;
 }
@@ -81,19 +81,20 @@ export default function GenericDataTable<T extends DataItem>({
     setInternalError(null);
   };
 
-  const saveEdit = async () => {
+  const handleSaveEdit = async () => {
     if (!editingItemId || !editedItemData) return;
     setIsSaving(true);
-    setInternalError(null);
     try {
       const originalItem = data.find(item => item.id === editingItemId);
       if (!originalItem) throw new Error("Original item not found for saving.");
-      await onSaveEdit(originalItem, editedItemData);
+      if (onSaveEdit) { // Check if onSaveEdit is provided
+        await onSaveEdit(editedItemData, originalItem);
+      }
       setEditingItemId(null);
       setEditedItemData(null);
-    } catch (err: any) {
-      console.error(`Error saving ${itemType}:`, err);
-      setInternalError(err.message || `Failed to save ${itemType}.`);
+    } catch (error) {
+      console.error(`Error saving ${itemType}:`, error);
+      setInternalError(error instanceof Error ? error.message : `Failed to save ${itemType}.`);
       // Do not cancel edit on error, allow user to retry or cancel
     } finally {
       setIsSaving(false);
@@ -238,7 +239,7 @@ export default function GenericDataTable<T extends DataItem>({
                       <div className="flex space-x-2">
                         {editingItemId === item.id ? (
                           <>
-                            <Button variant="outline" size="sm" onClick={saveEdit} disabled={isSaving} className="text-xs px-2 py-1 h-auto">
+                            <Button variant="outline" size="sm" onClick={handleSaveEdit} disabled={isSaving} className="text-xs px-2 py-1 h-auto">
                               <Save className="mr-1 h-3 w-3" /> {isSaving ? 'Saving...' : 'Save'}
                             </Button>
                             <Button variant="ghost" size="sm" onClick={cancelEdit} disabled={isSaving} className="text-xs px-2 py-1 h-auto">

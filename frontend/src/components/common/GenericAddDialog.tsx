@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea"; // For notes or longer text fields
+import React from 'react';
 
 export interface FormFieldConfig {
   name: string;
@@ -53,26 +54,56 @@ export function GenericAddDialog<TCreateDto extends Record<string, any>>({
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  // Store initialState in a ref to compare if it has meaningfully changed
+  const initialStateRef = React.useRef(initialState);
+
   useEffect(() => {
-    // Initialize form data with default values when dialog opens or formFields change
-    const initialData = { ...initialState } as TCreateDto;
-    formFields.forEach((field) => {
-      if (
-        initialData[field.name as keyof TCreateDto] === undefined &&
-        field.defaultValue !== undefined
-      ) {
-        initialData[field.name as keyof TCreateDto] =
-          field.defaultValue as TCreateDto[keyof TCreateDto];
-      } else if (initialData[field.name as keyof TCreateDto] === undefined) {
-        // Ensure all fields have a default empty string or null if no explicit default
-        initialData[field.name as keyof TCreateDto] = (
-          field.type === "number" ? null : ""
-        ) as TCreateDto[keyof TCreateDto];
+    // Only update if initialState prop *actually* changes, not just its reference for {} or shallow copies
+    if (JSON.stringify(initialState) !== JSON.stringify(initialStateRef.current)) {
+      initialStateRef.current = initialState;
+      // Re-initialize form if initialState truly changed while dialog is already open
+      // This is less common, usually init happens on open
+      if (isOpen) {
+        const initialData = { ...initialState } as TCreateDto;
+        formFields.forEach((field) => {
+          if (
+            initialData[field.name as keyof TCreateDto] === undefined &&
+            field.defaultValue !== undefined
+          ) {
+            initialData[field.name as keyof TCreateDto] =
+              field.defaultValue as TCreateDto[keyof TCreateDto];
+          } else if (initialData[field.name as keyof TCreateDto] === undefined) {
+            initialData[field.name as keyof TCreateDto] = (
+              field.type === "number" ? null : ""
+            ) as TCreateDto[keyof TCreateDto];
+          }
+        });
+        setFormData(initialData);
       }
-    });
-    setFormData(initialData);
-    setError(null); // Reset error when dialog opens or fields change
-  }, [isOpen, formFields, initialState]);
+    }
+  }, [isOpen, formFields, initialState]); // Keep initialState, but effect is now smarter
+
+  useEffect(() => {
+    // This effect specifically handles initializing/resetting when the dialog opens.
+    if (isOpen) {
+      const initialData = { ...initialStateRef.current } as TCreateDto; // Use the latest ref
+      formFields.forEach((field) => {
+        if (
+          initialData[field.name as keyof TCreateDto] === undefined &&
+          field.defaultValue !== undefined
+        ) {
+          initialData[field.name as keyof TCreateDto] =
+            field.defaultValue as TCreateDto[keyof TCreateDto];
+        } else if (initialData[field.name as keyof TCreateDto] === undefined) {
+          initialData[field.name as keyof TCreateDto] = (
+            field.type === "number" ? null : ""
+          ) as TCreateDto[keyof TCreateDto];
+        }
+      });
+      setFormData(initialData);
+      setError(null); // Reset error when dialog opens
+    }
+  }, [isOpen, formFields]); // Removed initialState from here; covered by the effect above and onOpen
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -123,15 +154,14 @@ export function GenericAddDialog<TCreateDto extends Record<string, any>>({
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[525px] p-0">
-        <DialogHeader className="p-6 pb-0">
+      <DialogContent className="sm:max-w-[525px] p-0 flex flex-col max-h-[90vh]">
+        <DialogHeader className="p-6 pb-0 shrink-0">
           <DialogTitle>{title || `Add New ${itemType}`}</DialogTitle>
           {description && (
             <DialogDescription>{description}</DialogDescription>
           )}
         </DialogHeader>
-        {/* Form content with scrolling */}
-        <div className="flex-grow overflow-y-auto px-6">
+        <div className="flex-auto overflow-y-auto px-6 py-4">
           {error && (
             <p className="text-red-500 text-sm mb-4 bg-red-100 border border-red-400 rounded p-3">
               {error}
@@ -203,7 +233,7 @@ export function GenericAddDialog<TCreateDto extends Record<string, any>>({
             ))}
           </form>
         </div>
-        <DialogFooter className="p-6 pt-4">
+        <DialogFooter className="p-6 pt-4 border-t shrink-0">
           <DialogClose asChild>
             <Button variant="outline" type="button" disabled={isLoading}>Cancel</Button>
           </DialogClose>

@@ -1,19 +1,19 @@
 import { JobApplication, JobApplicationCreate, JobApplicationUpdate } from '@/lib/types';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000';
+const JOB_APPLICATIONS_ENDPOINT = `${API_BASE_URL}/api/v1/job-apps`;
 
 export const fetchJobApplications = async (): Promise<JobApplication[]> => {
-  const response = await fetch(`${API_BASE_URL}/api/v1/job-applications/`);
+  const response = await fetch(`${JOB_APPLICATIONS_ENDPOINT}/`);
   if (!response.ok) {
     console.error('Fetch Job Applications - Response not OK. Status:', response.status, 'StatusText:', response.statusText);
-    const errorText = await response.text(); // Get raw text to see what the server is actually sending
+    const errorText = await response.text();
     console.error('Fetch Job Applications - Raw error response:', errorText);
     let errorData = { detail: `Failed to fetch job applications. Status: ${response.status}` };
     try {
-      errorData = JSON.parse(errorText); // Try to parse it as JSON
+      errorData = JSON.parse(errorText);
     } catch (e) {
       console.error('Fetch Job Applications - Could not parse error response as JSON.');
-      // errorData.detail is already set as a fallback
     }
     console.error('Error fetching job applications:', errorData);
     throw new Error(errorData.detail || `Failed to fetch job applications. Status: ${response.status}`);
@@ -22,7 +22,7 @@ export const fetchJobApplications = async (): Promise<JobApplication[]> => {
 };
 
 export const addJobApplication = async (jobApplicationData: JobApplicationCreate): Promise<JobApplication> => {
-  const response = await fetch(`${API_BASE_URL}/api/v1/job-applications/`, {
+  const response = await fetch(`${JOB_APPLICATIONS_ENDPOINT}/`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -38,7 +38,7 @@ export const addJobApplication = async (jobApplicationData: JobApplicationCreate
 };
 
 export const updateJobApplication = async (id: number, jobApplicationData: JobApplicationUpdate): Promise<JobApplication> => {
-  const response = await fetch(`${API_BASE_URL}/api/v1/job-applications/${id}/`, {
+  const response = await fetch(`${JOB_APPLICATIONS_ENDPOINT}/${id}/`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -54,7 +54,7 @@ export const updateJobApplication = async (id: number, jobApplicationData: JobAp
 };
 
 export const deleteJobApplication = async (id: number): Promise<void> => {
-  const response = await fetch(`${API_BASE_URL}/api/v1/job-applications/${id}/`, {
+  const response = await fetch(`${JOB_APPLICATIONS_ENDPOINT}/${id}/`, {
     method: 'DELETE',
   });
   if (!response.ok) {

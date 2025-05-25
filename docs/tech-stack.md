@@ -53,6 +53,16 @@ The "job-hunt" project will be a web application with a Python/FastAPI backend a
     -   **Purpose/Role in Project:** For creating and managing static content, such as the homepage guide and documentation.
     -   **Rationale/Decision Date:** Simple and effective for text-based content. (Decision: 17.5.2025)
 
+-   **Technology Name:** Shadcn/UI
+    -   **Current/Proposed Version(s):** Latest (components are vendored)
+    -   **Purpose/Role in Project:** UI component library providing pre-built, customizable components (e.g., Table, Dialog, Button, Input, Select, Textarea) built with Tailwind CSS and Radix UI.
+    -   **Rationale/Decision Date:** Accelerates UI development, provides accessible and well-styled components that are easily themeable. Components are added directly to the codebase (in `frontend/src/components/ui/`) allowing full control. (Decision: ~20.5.2025)
+
+-   **Technology Name:** lucide-react
+    -   **Current/Proposed Version(s):** Latest stable
+    -   **Purpose/Role in Project:** Provides a comprehensive set of SVG icons used throughout the frontend (e.g., PlusCircle, Edit, Trash).
+    -   **Rationale/Decision Date:** Lightweight, highly customizable, and extensive icon library. (Decision: ~20.5.2025)
+
 ### Backend Technologies
 
 -   **Technology Name:** Python

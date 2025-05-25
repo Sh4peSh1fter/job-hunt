@@ -30,45 +30,49 @@ job-hunt/
 │   │   ├── __init__.py
 │   │   ├── main.py           # FastAPI app instantiation and global middleware
 │   │   ├── routers/          # API routers (endpoints)
+│   │   │   ├── __init__.py     # Aggregates entity routers
+│   │   │   ├── companies.py    # Router for Company CRUD operations
+│   │   │   ├── job_applications.py # Router for JobApplication CRUD operations
+│   │   │   └── job_sources.py  # Router for JobSource CRUD operations
+│   │   ├── schemas/          # Pydantic schemas (formerly models/)
 │   │   │   ├── __init__.py
-│   │   │   └── tools_router.py # Example router for tools
-│   │   ├── models/           # Pydantic models for request/response, data models
+│   │   │   ├── company.py
+│   │   │   ├── job_application.py
+│   │   │   └── job_source.py
+│   │   │   └── application_event.py # (If ApplicationEvent is exposed via API)
+│   │   ├── services/         # Business logic (currently minimal, logic mostly in routers)
 │   │   │   └── __init__.py
-│   │   ├── services/         # Business logic, services interacting with tools/DB
-│   │   │   └── __init__.py
-│   │   └── db/               # Database related files (e.g., schema, connection, migrations if needed)
+│   │   └── db/               # Database related files
 │   │       ├── __init__.py
-│   │       └── database.py     # SQLite connection setup, ORM setup (e.g. SQLAlchemy)
-│   ├── tools/                  # Individual tool modules
-│   │   ├── __init__.py
-│   │   ├── keyword_analyzer/ # Example tool: Keyword Frequency Analyzer
-│   │   │   ├── __init__.py
-│   │   │   └── processor.py  # Logic for this specific tool
-│   │   └── company_research/ # Example tool: Company Research Assistant
-│   │       ├── __init__.py
-│   │       └── assistant.py  # Logic for this specific tool
+│   │       └── database.py     # SQLAlchemy engine, session, Base
+│   ├── alembic/              # Alembic migration scripts
 │   ├── tests/                # Backend tests
-│   │   └── __init__.py
-│   └── requirements.txt      # Python dependencies (or pyproject.toml if using Poetry)
+│   └── pyproject.toml        # Poetry for dependency management
 │
 ├── frontend/                 # Next.js frontend application
 │   ├── app/                  # Next.js 13+ App Router structure
-│   │   ├── (pages)/          # Main page routes
-│   │   │   ├── layout.tsx    # Root layout
-│   │   │   ├── page.tsx      # Homepage
-│   │   │   ├── guide/        # Guide page (job searching philosophy)
+│   │   ├── (pages)/          # Main page routes (grouping without affecting URL)
+│   │   │   ├── dashboard/
 │   │   │   │   └── page.tsx
-│   │   │   └── tools/        # Tools listing/launcher page
-│   │   │       ├── page.tsx
-│   │   │       └── [toolSlug]/ # Dynamic route for individual tools
-│   │   │           └── page.tsx
+│   │   │   ├── components/
+│   │   │   │   ├── page.tsx      # Hub page for data components
+│   │   │   │   ├── companies/page.tsx
+│   │   │   │   ├── job-applications/page.tsx
+│   │   │   │   └── job-sources/page.tsx
+│   │   │   ├── guide/page.tsx
+│   │   │   └── tools/page.tsx
+│   │   ├── layout.tsx        # Root layout
 │   │   └── globals.css
 │   ├── components/           # Reusable React components
-│   │   ├── ui/               # Generic UI elements (buttons, cards, etc. - from Shadcn/ui or similar if used)
-│   │   └── specific/         # Components specific to features/tools
-│   ├── lib/                  # Utility functions, constants, etc.
-│   ├── public/               # Static assets (images, fonts, etc.)
-│   ├── styles/               # Global styles (if not solely using Tailwind in components)
+│   │   ├── ui/               # Shadcn/UI components (vendored)
+│   │   ├── common/           # Generic, reusable application components (GenericDataTable, etc.)
+│   │   └── specific/         # Components specific to features/tools (currently less used due to generic components)
+│   ├── lib/                  # Utility functions, constants, type definitions
+│   │   ├── types.ts          # Core frontend type definitions
+│   │   ├── api/              # API interaction utility functions (company-api.ts, etc.)
+│   │   └── utils.ts          # General utility functions
+│   ├── public/               # Static assets
+│   ├── styles/               # Additional global styles (if needed)
 │   ├── tests/                # Frontend tests
 │   └── package.json          # Frontend dependencies and scripts
 │
@@ -91,19 +95,11 @@ job-hunt/
 
 ## 4. Key Directory Explanations
 
-*   **`backend/`**: Contains all Python code for the FastAPI server.
-    *   **`backend/app/`**: Core application components like routers, Pydantic models, service logic, and database interaction.
-    *   **`backend/tools/`**: Each subdirectory here represents a distinct tool. This promotes modularity, allowing tools to be developed and maintained somewhat independently. Each tool will contain its own processing logic.
-    *   **`backend/tests/`**: Unit and integration tests for the backend.
-*   **`frontend/`**: Contains all Next.js/React code for the user interface.
-    *   **`frontend/app/`**: Utilizes the Next.js App Router for routing and layouts.
-        *   `frontend/app/(pages)/`: Main page routes like homepage, guide, and tools.
-        *   `frontend/app/(pages)/tools/[toolSlug]/`: Dynamic routes for individual tool interfaces.
-    *   **`frontend/components/`**: Reusable React components, potentially split into generic UI elements and feature-specific components.
-    *   **`frontend/lib/`**: Client-side utility functions.
-    *   **`frontend/tests/`**: Unit and integration tests for frontend components.
-*   **`docs/`**: All project-related documentation, including PRD, ADRs, tech stack, rules, and this folder structure document.
-*   **`.cursor/`**: Contains the `.mdc` rule files for AI guidance.
+*   **`backend/app/routers/`**: Contains FastAPI routers for each data entity. `__init__.py` includes these into a main API router with specific prefixes (e.g., `/api/v1/companies`, `/api/v1/job-apps`).
+*   **`backend/app/schemas/`**: Houses Pydantic schemas used for request/response validation and data representation, replacing the older `models/` directory for this purpose. SQLAlchemy models (if used more directly for DB schema definition beyond Alembic) might reside in `db/` or a dedicated `orm_models/` directory.
+*   **`frontend/components/ui/`**: Stores components added via Shadcn/UI CLI. These are considered part of the project's codebase and can be customized.
+*   **`frontend/components/common/`**: Home for generic, reusable UI components like `GenericDataTable.tsx`, `GenericAddDialog.tsx`, etc., which form the core of the dynamic data pages.
+*   **`frontend/lib/api/`**: Contains typed functions for making API calls to the backend, abstracting fetch logic for each entity.
 
 ---
 

@@ -11,8 +11,8 @@ api_router = APIRouter() # Main router to include all sub-routers
 
 # Include the imported routers
 api_router.include_router(companies_router, prefix="/companies", tags=["companies"])
-api_router.include_router(job_applications_router, prefix="/job_applications", tags=["job_applications"])
-api_router.include_router(job_sources_router, prefix="/job_sources", tags=["job_sources"])
+api_router.include_router(job_applications_router, prefix="/job-apps", tags=["job_applications"])
+api_router.include_router(job_sources_router, prefix="/job-srcs", tags=["job_sources"])
 # api_router.include_router(application_events_router, prefix="/application_events", tags=["application_events"])
 
 # The main app will include this api_router with a /api/v1 prefix for all routes above.

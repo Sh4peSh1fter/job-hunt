@@ -64,6 +64,15 @@ This document outlines the initial tasks to set up the "job-hunt" project struct
     - [ ] Design and implement table/list view for job applications.
     - [ ] Implement functionality to add/edit/delete job applications (placeholder for now, depends on backend).
 
+### Phase 5: Documentation & Code Refinements
+
+- [x] **Task Title:** Create comprehensive project documentation. (Completed: May 21, 2024, Relevant Files: `docs/`, `frontend/src/components/common/README.md`, `frontend/src/lib/api/README.md`)
+    - *Notes:* Updated `tech-stack.md`, `folder-structure.md`. Created API docs, data model docs, frontend common component docs, and frontend API utility docs. Added main `docs/README.md`.
+- [ ] **Task Title:** Review and add/update TSDoc/JSDoc comments across frontend components and utility functions. (Assignee: [Dev], PRD: `docs/rules/documentation.md`)
+    - *Notes:* Focus on public APIs of generic components, API utilities, and page-level components where logic is complex.
+- [ ] **Task Title:** Review and add/update Python docstrings and type hints in backend services and routers. (Assignee: [Dev], PRD: `docs/rules/backend.md`)
+    - *Notes:* Ensure all public functions/methods have clear docstrings and type hints.
+
 ---
 
 ## ⏳ Future Tasks / Backlog

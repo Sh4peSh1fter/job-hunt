@@ -1,9 +1,10 @@
 import { JobSource, JobSourceCreate, JobSourceUpdate } from '@/lib/types';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000';
+const JOB_SOURCES_ENDPOINT = `${API_BASE_URL}/api/v1/job-srcs`;
 
 export const fetchJobSources = async (): Promise<JobSource[]> => {
-  const response = await fetch(`${API_BASE_URL}/api/v1/job-sources/`);
+  const response = await fetch(`${JOB_SOURCES_ENDPOINT}/`);
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({ detail: 'Failed to fetch job sources and could not parse error response.' }));
     console.error('Error fetching job sources:', errorData);
@@ -13,7 +14,7 @@ export const fetchJobSources = async (): Promise<JobSource[]> => {
 };
 
 export const addJobSource = async (jobSourceData: JobSourceCreate): Promise<JobSource> => {
-  const response = await fetch(`${API_BASE_URL}/api/v1/job-sources/`, {
+  const response = await fetch(`${JOB_SOURCES_ENDPOINT}/`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -29,7 +30,7 @@ export const addJobSource = async (jobSourceData: JobSourceCreate): Promise<JobS
 };
 
 export const updateJobSource = async (id: number, jobSourceData: JobSourceUpdate): Promise<JobSource> => {
-  const response = await fetch(`${API_BASE_URL}/api/v1/job-sources/${id}/`, {
+  const response = await fetch(`${JOB_SOURCES_ENDPOINT}/${id}/`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -45,7 +46,7 @@ export const updateJobSource = async (id: number, jobSourceData: JobSourceUpdate
 };
 
 export const deleteJobSource = async (id: number): Promise<void> => {
-  const response = await fetch(`${API_BASE_URL}/api/v1/job-sources/${id}/`, {
+  const response = await fetch(`${JOB_SOURCES_ENDPOINT}/${id}/`, {
     method: 'DELETE',
   });
   if (!response.ok) {
